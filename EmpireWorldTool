@@ -99,11 +99,45 @@ sub UpdateTools
 	}
 }
 
+# fairland command-line arguments
+# fairland  [-ahioqv]  [-e configfile] [-R seed] "Number of Contenents" "Contenent Size" "Number of Islands" "Average Size of Islands" "Spike percentage def 10" "Percent of Land that is mountain" "Minimum Distance between contenents" "Minimum Distance from islands to contenents"
+
+my $SettingsName = "";
+my $SettingsSeed = "";
+my $SettingsNumCont = 0;
+my $SettingsContSize = 0;
+my $SettingsNumIsl = 0;
+my $SettingsAvgSizeIsl = 0;
+my $SettingsSpikePct = 0;
+my $SettingsPctMountain = 0;
+my $SettingsMinDistCont = 0;
+my $SettingsMinDistIslands = 0;
+my $SettingsConfigFile = "";
+
+sub Add_New_Entry
+{
+	system ("clear");
+	print "Enter Desired Name:";
+	$SettingsName = <STDIN>;
+}
+
+sub GameSettingsMenu
+{
+	$menuselection = $d->menu( title => "Game Settings Manager", text => "Select one:",
+                            list => [
+                                      '1', 'List Settings',
+                                      '2', 'Edit coffeemud.ini',
+                                      '3', 'View MUD Log',
+                                      '4', 'Edit intro.txt',
+                                      '5', 'Update EmpireWorldTool',
+                                      'q', 'Quit to Main Menu' ] );
+}
+
 sub MainMenu
 {
 	$menuselection = $d->menu( title => "Main Menu", text => "Select one:",
                             list => [
-                                      '1', 'Edit mudUNIX.sh',
+                                      '1', 'List Settings',
                                       '2', 'Edit coffeemud.ini',
                                       '3', 'View MUD Log',
                                       '4', 'Edit intro.txt',
@@ -121,8 +155,8 @@ while (-1)
 	}
 	elsif ($menuselection eq "1")
 	{
-		# Edit mudUNIX.sh file
-		system("$FileEditor $FairLandSettings/mudUNIX.sh");
+		# Go to the game list page
+		GameSettingsMenu();
 	}
 	elsif ($menuselection eq "2")
 	{
