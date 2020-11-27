@@ -12,6 +12,8 @@ my $HOME = $ENV{HOME};
 my $FairLandSettings = "$HOME/.EmpSettingsDir";
 my $MUDLog = "/home/cmowner/CoffeeMud/mud.log";
 my $EmpireWorldToolDir = "$HOME/WolfpackEmpireCreator";
+chdir $EmpireWorldToolDir;
+#my $EmpireWorldToolDir = "WolfpackEmpireCreator";
 my $UpdateCommand = "/usr/bin/git pull";
 my $DEBUG_MODE = "off";
 
@@ -100,18 +102,12 @@ sub UpdateTools
 sub MainMenu
 {
 	$menuselection = $d->menu( title => "Main Menu", text => "Select one:",
-                            list => [ '1', 'Start Server',
-                                      '2', 'Stop Server',
-                                      '3', 'Server Console',
-                                      '4', 'Turn Off Respawn',
-                                      '5', 'Turn Respawn On',
-                                      '6', 'Edit mudUNIX.sh',
-                                      '7', 'Edit coffeemud.ini',
-                                      '9', 'View MUD Log',
-                                      '10', 'Kill MUD Process',
-                                      '11', 'Edit intro.txt',
-                                      '12', 'Update Utils',
-                                      '13', 'Update EmpireWorldTool',
+                            list => [
+                                      '1', 'Edit mudUNIX.sh',
+                                      '2', 'Edit coffeemud.ini',
+                                      '3', 'View MUD Log',
+                                      '4', 'Edit intro.txt',
+                                      '5', 'Update EmpireWorldTool',
                                       'q', 'Quit EmpireWorldTool' ] );
 }
 
@@ -123,27 +119,27 @@ while (-1)
 		$d->msgbox( title => $enjoyedtitle, text => "Thanks for using EmpireWorldTool..." );
 		exit 0;
 	}
-	elsif ($menuselection eq "6")
+	elsif ($menuselection eq "1")
 	{
 		# Edit mudUNIX.sh file
 		system("$FileEditor $FairLandSettings/mudUNIX.sh");
 	}
-	elsif ($menuselection eq "7")
+	elsif ($menuselection eq "2")
 	{
 		# Edit coffeemud.ini file
 		system("$FileEditor $FairLandSettings/coffeemud.ini");
 	}
-	elsif ($menuselection eq "9")
+	elsif ($menuselection eq "3")
 	{
                 # View the log file
                 system("$Pager $MUDLog");
 	}
-	elsif ($menuselection eq "11")
+	elsif ($menuselection eq "4")
 	{
 		# Edit intro.txt file
 		system("$FileEditor $FairLandSettings/resources/text/intro.txt");
 	}
-	elsif ($menuselection eq "12")
+	elsif ($menuselection eq "5")
 	{
 		# Update Menu
 		UpdateTools();
