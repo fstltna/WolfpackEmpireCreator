@@ -157,23 +157,6 @@ sub UpdateTools
 	}
 }
 
-sub UpdateTools
-{
-	while (-1)
-	{
-		UpdateToolsMenu();
-		if (($menuselection eq "CANCEL") || ($menuselection eq "ESC") || ($menuselection eq "") || ($menuselection eq "q") || ($menuselection eq "Q"))
-		{
-			return;
-		}
-		elsif ($menuselection eq "1")
-		{
-			# Update EmpireWorldTool
-			DoUpdate($EmpireWorldToolDir);
-		}
-	}
-}
-
 # fairland command-line arguments
 # fairland  [-ahioqv]  [-e configfile] [-R seed] "Number of Contenents" "Contenent Size" "Number of Islands" "Average Size of Islands" "Spike percentage def 10" "Percent of Land that is mountain" "Minimum Distance between contenents" "Minimum Distance from islands to contenents"
 
@@ -184,11 +167,14 @@ sub ReadInput
 
 	while (-1)
 	{
-		if ($CurrentString ne "")
+		if (defined($CurrentString))
 		{
-			print "Current value: $CurrentString\n";
+			print "$Prompt (Currently: $CurrentString): ";
 		}
-		print ("$Prompt: ");
+		else
+		{
+			print ("$Prompt: ");
+		}
 		my $InputLine = <>;
 		if (($InputLine eq "q") || ($InputLine eq "Q") || ($InputLine eq "quit"))
 		{
@@ -210,24 +196,22 @@ sub Add_New_Entry
 	print "Enter Desired Game Name: ";
 	$SettingsName = <>;
 	chop($SettingsName);
-print "FOO - Value is '$SettingsName'\n"; #ZZZ
-	if ($SettingsName eq "")
+	PrintDebugCommand("Entered name is '$SettingsName'\n");
+
+	if (($SettingsName eq "") || ($SettingsName eq "q") || ($SettingsName eq "Q"))
 	{
 		return;
 	}
-	$GameNames{$SettingsName} = ReadInput("$SettingsName", "Game Name");
-	{
-print "FOO2 - Value is '$GameNames{$SettingsName}'\n"; #ZZZ
-		if ($GameNames{$SettingsName} eq "")
-		{
-			return;
-		}
-	}
-	$GameSeed{$SettingsName} = ReadInput($GameSeed{$SettingsName}, "Game Seed");
-	if (($GameSeed{$SettingsName} eq "q") || ($GameSeed{$SettingsName} eq "Q") || ($GameSeed{$SettingsName} eq "quit"))
-	{
-		return;
-	}
+	$GameNames{$SettingsName} = $SettingsName;
+	$GameSeed{$SettingsName} = ReadInput($GameSeed{$SettingsName}, "Game Seed - leave blank for random");
+	$GameNumCont{$SettingsName} = ReadInput($GameNumCont{$SettingsName}, "Number of contenents");
+	$GameContSize{$SettingsName} = ReadInput($GameContSize{$SettingsName}, "Contenent Size");
+	$GameNumIsl{$SettingsName} = ReadInput($GameNumIsl{$SettingsName}, "Number of Islands");
+	$GameAvgSizeIsl{$SettingsName} = ReadInput($GameAvgSizeIsl{$SettingsName}, "Average Size of Islands");
+	$GameSpikePct{$SettingsName} = ReadInput($GameSpikePct{$SettingsName}, "Spike Percentage def 10");
+	$GamePctMountian{$SettingsName} = ReadInput($GamePctMountian{$SettingsName}, "Percent of Land That is Mountian");
+	$GameMinDistCont{$SettingsName} = ReadInput($GameMinDistCont{$SettingsName}, "Minimum Distance Between Contenents");
+	$GameMinDistIslands{$SettingsName} = ReadInput($GameMinDistIslands{$SettingsName}, "Minimum Distance From Islands to Contenenta");
 }
 
 sub GameSettingsMenu
@@ -262,9 +246,8 @@ sub MainMenu
 	$menuselection = $d->menu( title => "Main Menu", text => "Select one:",
                             list => [
                                       '1', 'List Settings',
-                                      '2', 'Edit coffeemud.ini',
-                                      '3', 'Edit intro.txt',
-                                      '4', 'Update EmpireWorldTool',
+                                      '2', 'Read Docs',
+                                      '3', 'Update EmpireWorldTool',
                                       'q', 'Quit' ] );
 }
 
@@ -284,14 +267,9 @@ while (-1)
 	elsif ($menuselection eq "2")
 	{
 		# Edit coffeemud.ini file
-		system("$FileEditor $FairLandSettings/coffeemud.ini");
+		system("$Pager $FairLandSettings/coffeemud.ini");
 	}
 	elsif ($menuselection eq "3")
-	{
-		# Edit intro.txt file
-		system("$FileEditor $FairLandSettings/resources/text/intro.txt");
-	}
-	elsif ($menuselection eq "4")
 	{
 		# Update Menu
 		UpdateTools();
