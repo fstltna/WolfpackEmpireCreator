@@ -1,0 +1,153 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use UI::Dialog;
+use Term::ReadKey;
+use Term::ANSIScreen qw(cls);
+
+my $FileEditor = "/bin/nano";
+my $Pager = "/usr/bin/less";
+my $HOME = $ENV{HOME};
+my $FairLandSettings = "$HOME/.EmpSettingsDir";
+my $MUDLog = "/home/cmowner/CoffeeMud/mud.log";
+my $EmpireWorldToolDir = "$HOME/WolfpackEmpireCreator";
+my $UpdateCommand = "/usr/bin/git pull";
+my $DEBUG_MODE = "off";
+
+###################################################
+# No changes below here
+###################################################
+
+my $EmpireWorldTool_ver = "1.0";
+
+if (! -e $FairLandSettings)
+{
+	if (! -d $FairLandSettings)
+	{
+		#mkdir ("$FairLandSettings") || die("Unable to create the settings directory");
+		mkdir ("$FairLandSettings");
+	}
+}
+chdir $FairLandSettings;
+sub PrintDebugCommand
+{
+	if ($DEBUG_MODE eq "off")
+	{
+		return;
+	}
+	my $PassedString = shift;
+	print "About to run:\n$PassedString\n";
+	print "Press Enter To Run This:";
+	my $entered = <STDIN>;
+}
+
+my $d = new UI::Dialog ( backtitle => "EmpireWorldTool v$EmpireWorldTool_ver", height => 20, width => 65, listheight => 5,
+	order => [ 'ascii', 'cdialog', 'xdialog' ]);
+
+my $windowtitle = "Welcome to EmpireWorldTool!";
+my $enjoyedtitle = "We hope you enjoyed EmpireWorldTool!";
+my $introtext =
+"This is the EmpireWorldTool, a utility to create Empire
+fairland commands for Empire operators to easily create and
+store your fairland world creation settings.";
+
+$d->msgbox( title => $windowtitle, text => $introtext );
+
+if (($d->state() eq "ESC") || ($d->state() eq "CANCEL"))
+{
+	exit 0;
+}
+
+my $menuselection = "";
+
+sub DoUpdate
+{
+	my $DesiredDir = $_[0];
+
+	# Update desired utility
+	chdir ($DesiredDir);
+	PrintDebugCommand("Running $UpdateCommand in $DesiredDir\n");
+	system("$UpdateCommand");
+	print "Press Enter To Continue";
+	my $entered = <STDIN>;
+}
+
+sub UpdateToolsMenu
+{
+	$menuselection = $d->menu( title => "Update Tools Menu", text => "Select one:",
+                            list => [ '1', 'Update EmpireWorldTool',
+                                      'q', 'Main Menu' ] );
+}
+
+sub UpdateTools
+{
+	while (-1)
+	{
+		UpdateToolsMenu();
+		if (($menuselection eq "CANCEL") || ($menuselection eq "ESC") || ($menuselection eq "") || ($menuselection eq "q") || ($menuselection eq "Q"))
+		{
+			return;
+		}
+		elsif ($menuselection eq "1")
+		{
+			# Update EmpireWorldTool
+			DoUpdate($EmpireWorldToolDir);
+		}
+	}
+}
+
+sub MainMenu
+{
+	$menuselection = $d->menu( title => "Main Menu", text => "Select one:",
+                            list => [ '1', 'Start Server',
+                                      '2', 'Stop Server',
+                                      '3', 'Server Console',
+                                      '4', 'Turn Off Respawn',
+                                      '5', 'Turn Respawn On',
+                                      '6', 'Edit mudUNIX.sh',
+                                      '7', 'Edit coffeemud.ini',
+                                      '9', 'View MUD Log',
+                                      '10', 'Kill MUD Process',
+                                      '11', 'Edit intro.txt',
+                                      '12', 'Update Utils',
+                                      '13', 'Update EmpireWorldTool',
+                                      'q', 'Quit EmpireWorldTool' ] );
+}
+
+while (-1)
+{
+	MainMenu();
+	if (($menuselection eq "CANCEL") || ($menuselection eq "ESC") || ($menuselection eq "") || ($menuselection eq "q") || ($menuselection eq "Q"))
+	{
+		$d->msgbox( title => $enjoyedtitle, text => "Thanks for using EmpireWorldTool..." );
+		exit 0;
+	}
+	elsif ($menuselection eq "6")
+	{
+		# Edit mudUNIX.sh file
+		system("$FileEditor $FairLandSettings/mudUNIX.sh");
+	}
+	elsif ($menuselection eq "7")
+	{
+		# Edit coffeemud.ini file
+		system("$FileEditor $FairLandSettings/coffeemud.ini");
+	}
+	elsif ($menuselection eq "9")
+	{
+                # View the log file
+                system("$Pager $MUDLog");
+	}
+	elsif ($menuselection eq "11")
+	{
+		# Edit intro.txt file
+		system("$FileEditor $FairLandSettings/resources/text/intro.txt");
+	}
+	elsif ($menuselection eq "12")
+	{
+		# Update Menu
+		UpdateTools();
+	}
+}
+
+exit 0;
