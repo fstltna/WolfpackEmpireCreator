@@ -21,16 +21,19 @@ my $DEBUG_MODE = "off";
 ###################################################
 
 my $EmpireWorldTool_ver = "1.0";
+
 my %GameNames = ();
 my %GameSeed = ();
 my %GameNumCont = ();
 my %GameContSize = ();
 my %GameNumIsl = ();
 my %GameAvgSizeIsl = ();
-my %GameSpikePCt = ();
+my %GameSpikePct = ();
 my %GamePctMountian = ();
 my %GameMinDistCont = ();
 my %GameMinDistIslands = ();
+
+my $menuselection = "";
 
 if (! -e $FairLandSettings)
 {
@@ -41,6 +44,52 @@ if (! -e $FairLandSettings)
 	}
 }
 chdir $FairLandSettings;
+
+my %file_data = ();
+
+sub LoadInSettings
+{
+	if (! -e "$FairLandSettings/oursettings")
+	{
+		system("touch $FairLandSettings/oursettings");
+	}
+	open(IN, "$FairLandSettings/oursettings") || die("ERROR: Could not open input file $FairLandSettings/oursettings");
+	my $line;
+	while($line = <IN>)
+	{
+		chomp($line);
+		my @line_info = split(/\t/, $line);
+		my $key_field = $line_info[0];
+		
+		my $line_info = \@line_info;
+		for (my $i = 0; $i <= $#$line_info; $i++)
+		{
+			$file_data{$key_field}{$i} = $line_info->[$i];
+			print "$file_data{$key_field}{$i}\n";
+		}
+	}
+	close(IN);
+	foreach my $key (keys %file_data)
+	{
+	# ZZZ
+		print "ScriptKey: $key\n";
+		$GameNames{$key} = $file_data{$key}[0];
+		$GameSeed{$key} = $file_data{$key}[1];
+		$GameNumCont{$key} = $file_data{$key}[2];
+		$GameContSize{$key} = $file_data{$key}[3];
+		$GameNumIsl{$key} = $file_data{$key}[4];
+		$GameAvgSizeIsl{$key} = $file_data{$key}[5];
+		$GameSpikePct{$key} = $file_data{$key}[6];
+		$GamePctMountian{$key} = $file_data{$key}[7];
+		$GameMinDistCont{$key} = $file_data{$key}[8];
+		$GameMinDistIslands{$key} = $file_data{$key}[9];
+	}
+	return(1);
+}
+
+# Load in all the games listed
+LoadInSettings();
+
 sub PrintDebugCommand
 {
 	if ($DEBUG_MODE eq "off")
@@ -69,8 +118,6 @@ if (($d->state() eq "ESC") || ($d->state() eq "CANCEL"))
 {
 	exit 0;
 }
-
-my $menuselection = "";
 
 sub DoUpdate
 {
@@ -114,6 +161,8 @@ sub UpdateTools
 my $EndInput = "end";
 sub ReadInput
 {
+	my $Prompt = $_[0];
+
 	while (-1)
 	{
 		print ("$Prompt: ");
@@ -141,12 +190,12 @@ my $SettingsMinDistCont = 0;
 my $SettingsMinDistIslands = 0;
 my $SettingsConfigFile = "";
 
-sub LoadSettings
-{
-	open(FOO)
-	{
-	}
-}
+#sub LoadSettings
+#{
+#	open(FOO)
+#	{
+#	}
+#}
 
 sub Add_New_Entry
 {
@@ -157,7 +206,7 @@ sub Add_New_Entry
 	{
 		# If the key is found in the hash then return
 		print "That name already exists... Press enter to load it in...";
-		$GetInput = <STDIN>;
+		my $GetInput = <STDIN>;
 		LoadSettings($SettingsName);
 	}
 	$GameNames{$SettingsName} = ReadInput();
@@ -173,16 +222,6 @@ sub Add_New_Entry
 	{
 		return;
 	}
-my $SettingsNumCont = 0;
-my $SettingsContSize = 0;
-my $SettingsNumIsl = 0;
-my $SettingsAvgSizeIsl = 0;
-my $SettingsSpikePct = 0;
-my $SettingsPctMountain = 0;
-my $SettingsMinDistCont = 0;
-my $SettingsMinDistIslands = 0;
-my $SettingsConfigFile = "";
-
 }
 
 sub GameSettingsMenu
