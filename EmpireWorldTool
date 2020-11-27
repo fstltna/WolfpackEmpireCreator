@@ -33,6 +33,7 @@ my %GamePctMountian = ();
 my %GameMinDistCont = ();
 my %GameMinDistIslands = ();
 my %GameConfFile = ();
+my %file_data = ();
 
 sub PrintDebugCommand
 {
@@ -57,8 +58,6 @@ if (! -e $FairLandSettings)
 	}
 }
 chdir $FairLandSettings;
-
-my %file_data = ();
 
 sub LoadInSettings
 {
@@ -192,6 +191,26 @@ sub ReadInput
 
 my $SettingsName = "";
 
+sub WriteHashes
+{
+	# ZZZ
+	open(my $fh, '>', "$FairLandSettings/oursettings") || die("Unable to update '$FairLandSettings/oursettings'");
+my $Foo = keys %file_data;
+#print "$file_data{$key}{0}\n";
+print "'foo is $Foo'\n";
+#my $Temp = keys %file_data;
+#print "hash is '$Temp'\n";
+	foreach my $key (keys %file_data)
+	{
+print "Dumping '$key'\n";
+		print($fh "$GameNames{$key}	$GameSeed{$key}	$GameNumCont{$key}	$GameContSize{$key}	$GameNumIsl{$key}	$GameAvgSizeIsl{$key}	$GameSpikePct{$key}	$GamePctMountian{$key}	$GameMinDistCont{$key}	$GameMinDistIslands{$key}\n");
+		print("$GameNames{$key}	$GameSeed{$key}	$GameNumCont{$key}	$GameContSize{$key}	$GameNumIsl{$key}	$GameAvgSizeIsl{$key}	$GameSpikePct{$key}	$GamePctMountian{$key}	$GameMinDistCont{$key}	$GameMinDistIslands{$key}\n");
+	}
+	close($fh);
+	#LoadInSettings();
+sleep (5);
+}
+
 sub Add_New_Entry
 {
 	system ("clear");
@@ -215,6 +234,8 @@ sub Add_New_Entry
 	$GameMinDistCont{$SettingsName} = ReadInput($GameMinDistCont{$SettingsName}, "Minimum Distance Between Contenents");
 	$GameMinDistIslands{$SettingsName} = ReadInput($GameMinDistIslands{$SettingsName}, "Minimum Distance From Islands to Contenenta");
 	$GameConfFile{$SettingsName} = ReadInput($GameConfFile{$SettingsName}, "Config file with your settings");
+	# Write out hashes to disk
+	WriteHashes();
 }
 
 sub GameSettingsMenu
