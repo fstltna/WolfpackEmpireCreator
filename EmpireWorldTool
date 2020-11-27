@@ -42,7 +42,7 @@ sub PrintDebugCommand
 	my $PassedString = shift;
 	print "About to run:\n$PassedString\n";
 	print "Press Enter To Run This:";
-	my $entered = <STDIN>;
+	my $entered = <>;
 }
 
 my $menuselection = "";
@@ -130,7 +130,7 @@ sub DoUpdate
 	PrintDebugCommand("Running $UpdateCommand in $DesiredDir\n");
 	system("$UpdateCommand");
 	print "Press Enter To Continue";
-	my $entered = <STDIN>;
+	my $entered = <>;
 }
 
 sub UpdateToolsMenu
@@ -184,7 +184,10 @@ sub ReadInput
 
 	while (-1)
 	{
-		print "Current value: $CurrentString\n";
+		if ($CurrentString ne "")
+		{
+			print "Current value: $CurrentString\n";
+		}
 		print ("$Prompt: ");
 		my $InputLine = <>;
 		if (($InputLine eq "q") || ($InputLine eq "Q") || ($InputLine eq "quit"))
@@ -193,6 +196,7 @@ sub ReadInput
 		}
 		if ($InputLine ne "")
 		{
+			chop($InputLine);
 			return $InputLine;
 		}
 	}
@@ -203,14 +207,17 @@ my $SettingsName = "";
 sub Add_New_Entry
 {
 	system ("clear");
-	print "Enter Desired Name:";
-	$SettingsName = <STDIN>;
-	if ($SettingsName ne "")
+	print "Enter Desired Game Name: ";
+	$SettingsName = <>;
+	chop($SettingsName);
+print "FOO - Value is '$SettingsName'\n"; #ZZZ
+	if ($SettingsName eq "")
 	{
-		print ("Currently reading $SettingsName\n");
+		return;
 	}
 	$GameNames{$SettingsName} = ReadInput("$SettingsName", "Game Name");
 	{
+print "FOO2 - Value is '$GameNames{$SettingsName}'\n"; #ZZZ
 		if ($GameNames{$SettingsName} eq "")
 		{
 			return;
@@ -242,6 +249,7 @@ sub GameSettings
 	elsif ($menuselection eq "1")
 	{
 		# Add Server
+		Add_New_Entry();
 	}
 	elsif ($menuselection eq "2")
 	{
