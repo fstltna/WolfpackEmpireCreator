@@ -65,7 +65,7 @@ sub LoadInSettings
 		for (my $i = 0; $i <= $#$line_info; $i++)
 		{
 			$file_data{$key_field}{$i} = $line_info->[$i];
-			print "$file_data{$key_field}{$i}\n";
+			PrintDebugCommand("$file_data{$key_field}{$i}");
 		}
 	}
 	close(IN);
@@ -73,17 +73,18 @@ sub LoadInSettings
 	{
 	# ZZZ
 		print "ScriptKey: $key\n";
-		$GameNames{$key} = $file_data{$key}[0];
-		$GameSeed{$key} = $file_data{$key}[1];
-		$GameNumCont{$key} = $file_data{$key}[2];
-		$GameContSize{$key} = $file_data{$key}[3];
-		$GameNumIsl{$key} = $file_data{$key}[4];
-		$GameAvgSizeIsl{$key} = $file_data{$key}[5];
-		$GameSpikePct{$key} = $file_data{$key}[6];
-		$GamePctMountian{$key} = $file_data{$key}[7];
-		$GameMinDistCont{$key} = $file_data{$key}[8];
-		$GameMinDistIslands{$key} = $file_data{$key}[9];
+		$GameNames{$key} = $file_data{$key}{0};
+		$GameSeed{$key} = $file_data{$key}{1};
+		$GameNumCont{$key} = $file_data{$key}{2};
+		$GameContSize{$key} = $file_data{$key}{3};
+		$GameNumIsl{$key} = $file_data{$key}{4};
+		$GameAvgSizeIsl{$key} = $file_data{$key}{5};
+		$GameSpikePct{$key} = $file_data{$key}{6};
+		$GamePctMountian{$key} = $file_data{$key}{7};
+		$GameMinDistCont{$key} = $file_data{$key}{8};
+		$GameMinDistIslands{$key} = $file_data{$key}{9};
 	}
+sleep (10);
 	return(1);
 }
 
@@ -166,7 +167,7 @@ sub ReadInput
 	while (-1)
 	{
 		print ("$Prompt: ");
-		my $InputLine = <STDIO>;
+		my $InputLine = <>;
 		if (($InputLine eq "q") || ($InputLine eq "Q") || ($InputLine eq "quit"))
 		{
 			return "";
