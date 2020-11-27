@@ -158,10 +158,10 @@ sub UpdateTools
 # fairland command-line arguments
 # fairland  [-ahioqv]  [-e configfile] [-R seed] "Number of Contenents" "Contenent Size" "Number of Islands" "Average Size of Islands" "Spike percentage def 10" "Percent of Land that is mountain" "Minimum Distance between contenents" "Minimum Distance from islands to contenents"
 
-my $EndInput = "end";
 sub ReadInput
 {
-	my $Prompt = $_[0];
+	my $CurrentString = $_[0];
+	my $Prompt = $_[1];
 
 	while (-1)
 	{
@@ -202,23 +202,21 @@ sub Add_New_Entry
 	system ("clear");
 	print "Enter Desired Name:";
 	$SettingsName = <STDIN>;
-	if (exists($GameNames{$SettingsName})) 
+	if ($SettingsName ne "")
 	{
-		# If the key is found in the hash then return
-		print "That name already exists... Press enter to load it in...";
-		my $GetInput = <STDIN>;
-		LoadSettings($SettingsName);
+		print ("Currently loading $SettingsName\n");
 	}
-	$GameNames{$SettingsName} = ReadInput();
+	$GameNames{$SettingsName} = ReadInput("$SettingsName", "Game Name");
 	{
 		if ($GameNames{$SettingsName} eq "")
 		{
 			return;
 		}
 	}
+	my $ReadInput = "";
 	$SettingsSeed = "";
-	$GameSeed{$SettingsName} = ReadInput();
-	if (($GameNames{$SettingsName} eq "q") || ($GameNames{$SettingsName} eq "Q") || ($GameNames{$SettingsName} eq "quit"))
+	$GameSeed{$SettingsName} = ReadInput($GameSeed{$SettingsName}, "Game Seed");
+	if (($GameSeed{$SettingsName} eq "q") || ($GameNames{$SettingsName} eq "Q") || ($GameNames{$SettingsName} eq "quit"))
 	{
 		return;
 	}
