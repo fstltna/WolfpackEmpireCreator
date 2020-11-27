@@ -10,7 +10,6 @@ my $FileEditor = "/bin/nano";
 my $Pager = "/usr/bin/less";
 my $HOME = $ENV{HOME};
 my $FairLandSettings = "$HOME/.EmpSettingsDir";
-my $MUDLog = "/home/cmowner/CoffeeMud/mud.log";
 my $EmpireWorldToolDir = "$HOME/WolfpackEmpireCreator";
 chdir $EmpireWorldToolDir;
 #my $EmpireWorldToolDir = "WolfpackEmpireCreator";
@@ -22,6 +21,16 @@ my $DEBUG_MODE = "off";
 ###################################################
 
 my $EmpireWorldTool_ver = "1.0";
+my %GameNames = ();
+my %GameSeed = ();
+my %GameNumCont = ();
+my %GameContSize = ();
+my %GameNumIsl = ();
+my %GameAvgSizeIsl = ();
+my %GameSpikePCt = ();
+my %GamePctMountian = ();
+my %GameMinDistCont = ();
+my %GameMinDistIslands = ();
 
 if (! -e $FairLandSettings)
 {
@@ -102,6 +111,24 @@ sub UpdateTools
 # fairland command-line arguments
 # fairland  [-ahioqv]  [-e configfile] [-R seed] "Number of Contenents" "Contenent Size" "Number of Islands" "Average Size of Islands" "Spike percentage def 10" "Percent of Land that is mountain" "Minimum Distance between contenents" "Minimum Distance from islands to contenents"
 
+my $EndInput = "end";
+sub ReadInput
+{
+	while (-1)
+	{
+		print ("$Prompt: ");
+		my $InputLine = <STDIO>;
+		if (($InputLine eq "q") || ($InputLine eq "Q") || ($InputLine eq "quit"))
+		{
+			return "";
+		}
+		if ($InputLine ne "")
+		{
+			return $InputLine;
+		}
+	}
+}
+
 my $SettingsName = "";
 my $SettingsSeed = "";
 my $SettingsNumCont = 0;
@@ -114,11 +141,48 @@ my $SettingsMinDistCont = 0;
 my $SettingsMinDistIslands = 0;
 my $SettingsConfigFile = "";
 
+sub LoadSettings
+{
+	open(FOO)
+	{
+	}
+}
+
 sub Add_New_Entry
 {
 	system ("clear");
 	print "Enter Desired Name:";
 	$SettingsName = <STDIN>;
+	if (exists($GameNames{$SettingsName})) 
+	{
+		# If the key is found in the hash then return
+		print "That name already exists... Press enter to load it in...";
+		$GetInput = <STDIN>;
+		LoadSettings($SettingsName);
+	}
+	$GameNames{$SettingsName} = ReadInput();
+	{
+		if ($GameNames{$SettingsName} eq "")
+		{
+			return;
+		}
+	}
+	$SettingsSeed = "";
+	$GameSeed{$SettingsName} = ReadInput();
+	if (($GameNames{$SettingsName} eq "q") || ($GameNames{$SettingsName} eq "Q") || ($GameNames{$SettingsName} eq "quit"))
+	{
+		return;
+	}
+my $SettingsNumCont = 0;
+my $SettingsContSize = 0;
+my $SettingsNumIsl = 0;
+my $SettingsAvgSizeIsl = 0;
+my $SettingsSpikePct = 0;
+my $SettingsPctMountain = 0;
+my $SettingsMinDistCont = 0;
+my $SettingsMinDistIslands = 0;
+my $SettingsConfigFile = "";
+
 }
 
 sub GameSettingsMenu
@@ -139,10 +203,9 @@ sub MainMenu
                             list => [
                                       '1', 'List Settings',
                                       '2', 'Edit coffeemud.ini',
-                                      '3', 'View MUD Log',
-                                      '4', 'Edit intro.txt',
-                                      '5', 'Update EmpireWorldTool',
-                                      'q', 'Quit EmpireWorldTool' ] );
+                                      '3', 'Edit intro.txt',
+                                      '4', 'Update EmpireWorldTool',
+                                      'q', 'Quit' ] );
 }
 
 while (-1)
@@ -165,15 +228,10 @@ while (-1)
 	}
 	elsif ($menuselection eq "3")
 	{
-                # View the log file
-                system("$Pager $MUDLog");
-	}
-	elsif ($menuselection eq "4")
-	{
 		# Edit intro.txt file
 		system("$FileEditor $FairLandSettings/resources/text/intro.txt");
 	}
-	elsif ($menuselection eq "5")
+	elsif ($menuselection eq "4")
 	{
 		# Update Menu
 		UpdateTools();
