@@ -223,6 +223,19 @@ sub GameSettingsMenu
                                       'q', 'Main Menu' ] );
 }
 
+sub List_Servers
+{
+	system("clear");
+	foreach my $key (keys %file_data)
+	{
+		print "Key field: $key\n";
+		print "Name | Seed | NumCont | Cont Size | NumIsl | AvgSize | SpikePct | PctMnt | MinDistCont | MinDistIsl\n";
+		print "$key | $GameSeed{$key}| $GameNumCont{$key} | $GameContSize{$key} | $GameNumIsl{$key} | $GameAvgSizeIsl{$key} | $GameSpikePct{$key} | $GamePctMountian{$key} | $GameMinDistCont{$key} | $GameMinDistIslands{$key}\n";
+	}
+	print "Press ENTER to continue:";
+	my $entered = <>;
+}
+
 sub GameSettings
 {
 	GameSettingsMenu();
@@ -238,6 +251,7 @@ sub GameSettings
 	elsif ($menuselection eq "2")
 	{
 		# List Servers
+		List_Servers();
 	}
 }
 
