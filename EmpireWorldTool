@@ -20,7 +20,7 @@ my $DEBUG_MODE = "off";
 # No changes below here
 ###################################################
 
-my $EmpireWorldTool_ver = "1.0";
+my $EmpireWorldTool_ver = "0.2";
 
 my %GameNames = ();
 my %GameSeed = ();
