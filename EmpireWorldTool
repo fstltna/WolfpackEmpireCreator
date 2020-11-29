@@ -203,8 +203,8 @@ print "'foo is $Foo'\n";
 	foreach my $key (keys %file_data)
 	{
 print "Dumping '$key'\n";
-		print($fh "$GameNames{$key}	$GameSeed{$key}	$GameNumCont{$key}	$GameContSize{$key}	$GameNumIsl{$key}	$GameAvgSizeIsl{$key}	$GameSpikePct{$key}	$GamePctMountian{$key}	$GameMinDistCont{$key}	$GameMinDistIslands{$key}\n");
-		print("$GameNames{$key}	$GameSeed{$key}	$GameNumCont{$key}	$GameContSize{$key}	$GameNumIsl{$key}	$GameAvgSizeIsl{$key}	$GameSpikePct{$key}	$GamePctMountian{$key}	$GameMinDistCont{$key}	$GameMinDistIslands{$key}\n");
+		print($fh "$GameNames{$key}	$GameSeed{$key}	$GameNumCont{$key}	$GameContSize{$key}	$GameNumIsl{$key}	$GameAvgSizeIsl{$key}	$GameSpikePct{$key}	$GamePctMountian{$key}	$GameMinDistCont{$key}	$GameMinDistIslands{$key}	$GameConfFile{$key}\n");
+		print("$GameNames{$key}	$GameSeed{$key}	$GameNumCont{$key}	$GameContSize{$key}	$GameNumIsl{$key}	$GameAvgSizeIsl{$key}	$GameSpikePct{$key}	$GamePctMountian{$key}	$GameMinDistCont{$key}	$GameMinDistIslands{$key}	$GameConfFile{$key}\n");
 	}
 	close($fh);
 	#LoadInSettings();
@@ -244,7 +244,7 @@ sub List_Servers
 	print "Name | Seed | NumCont | Cont Size | NumIsl | AvgSize | SpikePct | PctMnt | MinDistCont | MinDistIsl | ConFile\n";
 	foreach my $key (keys %file_data)
 	{
-		print "$GameNames{$key}:\n";
+		print "Game Name: $GameNames{$key}\n";
 		my $fairland_command = "fairland -e '$GameConfFile{$key}' ";
 		PrintDebugCommand("Key Field: $key");
 		if ($GameSeed{$key} ne "")
@@ -254,7 +254,7 @@ sub List_Servers
 		$fairland_command = "$fairland_command  $GameNumCont{$key} $GameContSize{$key} $GameNumIsl{$key} $GameAvgSizeIsl{$key} $GameSpikePct{$key} $GamePctMountian{$key} $GameMinDistCont{$key} $GameMinDistIslands{$key}";
 		print "$fairland_command\n";
 	#	print "$key | $GameSeed{$key}| $GameNumCont{$key} | $GameContSize{$key} | $GameNumIsl{$key} | $GameAvgSizeIsl{$key} | $GameSpikePct{$key} | $GamePctMountian{$key} | $GameMinDistCont{$key} | $GameMinDistIslands{$key}\n";
-		print "---\n";
+		print "=============================\n";
 	}
 	print "Press ENTER to continue:";
 	my $entered = <>;
