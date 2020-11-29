@@ -238,15 +238,6 @@ sub Add_New_Entry
 	WriteHashes();
 }
 
-sub GameSettingsMenu
-{
-	$menuselection = $d->menu( title => "Game Settings Manager", text => "Select one:",
-                            list => [
-                                      '1', 'Add Server',
-                                      '2', 'List Servers',
-                                      'q', 'Main Menu' ] );
-}
-
 sub List_Servers
 {
 	system("clear");
@@ -269,31 +260,12 @@ sub List_Servers
 	my $entered = <>;
 }
 
-sub GameSettings
-{
-	GameSettingsMenu();
-	if (($menuselection eq "CANCEL") || ($menuselection eq "ESC") || ($menuselection eq "q") || ($menuselection eq "Q"))
-	{
-		return;
-	}
-	elsif ($menuselection eq "1")
-	{
-		# Add Server
-		Add_New_Entry();
-	}
-	elsif ($menuselection eq "2")
-	{
-		# List Servers
-		List_Servers();
-	}
-}
-
 sub MainMenu
 {
 	$menuselection = $d->menu( title => "Main Menu", text => "Select one:",
                             list => [
-                                      '1', 'List Settings',
-                                      '2', 'Read Docs',
+                                      '1', 'Add Server',
+                                      '2', 'List Servers',
                                       '3', 'Update EmpireWorldTool',
                                       'q', 'Quit' ] );
 }
@@ -308,13 +280,13 @@ while (-1)
 	}
 	elsif ($menuselection eq "1")
 	{
-		# Go to the game list page
-		GameSettings();
+		# Add Server
+		Add_New_Entry();
 	}
 	elsif ($menuselection eq "2")
 	{
-		# Edit coffeemud.ini file
-		system("$Pager $FairLandSettings/coffeemud.ini");
+		# List Servers
+		List_Servers();
 	}
 	elsif ($menuselection eq "3")
 	{
